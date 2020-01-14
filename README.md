@@ -6,6 +6,8 @@ SIAM Journal on Scientific Computing, 38(1), A614-A630, 2016
 
 [Technical report here](https://arxiv.org/pdf/1504.00499.pdf)
 
+[See also Pottslab for related functions](https://github.com/mstorath/Pottslab)
+
 ## Estimation of real-valued signals
 Estimates a real-valued signal using the L1-TV model (exact non-iterative solver)
 
