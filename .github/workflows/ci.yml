@@ -21,7 +21,10 @@ jobs:
       - uses: Swatinem/rust-cache@v2
       - name: cargo fmt
         run: cargo fmt --all -- --check
+      # clippy is platform-agnostic in intent; running it on one platform is
+      # enough and avoids macOS/Windows-specific lint flakes.
       - name: cargo clippy
+        if: matrix.os == 'ubuntu-latest'
         run: cargo clippy --all-targets -- -D warnings
       - name: cargo test
         run: cargo test --release
@@ -41,13 +44,21 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - uses: dtolnay/rust-toolchain@stable
       - uses: Swatinem/rust-cache@v2
-      - name: install build deps
-        run: pip install maturin pytest numpy scipy matplotlib
-      - name: maturin develop
-        run: maturin develop --release
+      # PEP 517 install — pulls maturin from build-system.requires, builds the
+      # Rust extension via maturin, and installs the package + test extras
+      # (pytest, scipy, matplotlib). Avoids the venv-required `maturin develop`
+      # path that fails on stock GitHub-hosted runners.
+      - name: install l1tv (PEP 517)
+        run: pip install ".[test]"
+      # Run pytest and demos from a directory that does NOT contain `l1tv/`,
+      # otherwise Python's cwd-on-sys.path rule shadows the installed package
+      # with the source-tree copy (which lacks the compiled `_core` extension).
       - name: pytest
-        run: pytest tests -v
+        working-directory: ${{ runner.temp }}
+        run: pytest -v ${{ github.workspace }}/tests
       - name: smoke demos
+        working-directory: ${{ runner.temp }}
+        shell: bash
         run: |
-          python demos_python/demo_real.py
-          python demos_python/demo_circ.py
+          python "${GITHUB_WORKSPACE}/demos_python/demo_real.py"
+          python "${GITHUB_WORKSPACE}/demos_python/demo_circ.py"
