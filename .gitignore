@@ -10,3 +10,41 @@ unitTests/swUnitTestDistAngles.m
 unitTests/swUnitTestDistTransformNE.m
 
 unitTests/swUnitTestMinL1TVCirc.m
+
+# Rust build artifacts
+target/
+Cargo.lock.bak
+
+# Compiled Python extension (platform-specific; built locally or by CI)
+l1tv/_core*.so
+l1tv/_core*.pyd
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+.pytest_cache/
+
+# macOS
+.DS_Store
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+.eggs/
+
+# Editors / IDEs
+.vscode/
+.idea/
+*.swp
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Demo plot artifacts (regenerated on demand)
+demos_python/*.png
+
+# Virtualenvs
+.venv/
+venv/

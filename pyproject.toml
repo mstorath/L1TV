@@ -1,0 +1,62 @@
+[build-system]
+requires = ["maturin>=1.4,<2.0"]
+build-backend = "maturin"
+
+[project]
+name = "l1tv"
+version = "0.1.0"
+description = "Exact L1-TV regularisation of real- or circle-valued 1-D signals — Python/Rust port of MATLAB l1tv (Storath, Weinmann, Unser 2016)"
+readme = "README_PYTHON.md"
+license = {text = "MIT"}
+requires-python = ">=3.9"
+keywords = [
+  "l1-tv",
+  "total-variation",
+  "denoising",
+  "signal-processing",
+  "piecewise-constant",
+  "circular-data",
+  "phase-unwrapping",
+  "edge-preserving",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Rust",
+  "Topic :: Scientific/Engineering :: Mathematics",
+  "Topic :: Scientific/Engineering :: Information Analysis",
+]
+dependencies = ["numpy>=1.20"]
+authors = [
+  {name = "Martin Storath"},
+  {name = "Andreas Weinmann"},
+]
+
+[project.optional-dependencies]
+test = ["pytest>=7", "scipy>=1.7", "matplotlib"]
+
+[project.urls]
+Homepage = "https://github.com/mstorath/L1TV"
+Repository = "https://github.com/mstorath/L1TV"
+Changelog = "https://github.com/mstorath/L1TV/blob/master/CHANGELOG.md"
+"Bug Tracker" = "https://github.com/mstorath/L1TV/issues"
+
+[tool.maturin]
+python-source = "."
+module-name = "l1tv._core"
+# `extension-module` is feature-gated in Cargo.toml so `cargo test` can build
+# without it (and link libpython normally on macOS, which doesn't tolerate
+# unresolved symbols in a test binary). Maturin must turn it on for the wheel.
+features = ["extension-module"]
+include = [{ path = "LICENSE", format = "wheel" }]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

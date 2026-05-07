@@ -1,0 +1,70 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+
+jobs:
+  rust:
+    name: Rust ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    steps:
+      - uses: actions/checkout@v4
+      # Pin Python so pyo3-ffi's build script doesn't pick up the runner's
+      # default Python (now 3.14 on GHA's latest images), which is newer than
+      # pyo3 0.24.2's supported range.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy, rustfmt
+      - uses: Swatinem/rust-cache@v2
+      - name: cargo fmt
+        run: cargo fmt --all -- --check
+      # clippy is platform-agnostic in intent; running it on one platform is
+      # enough and avoids macOS/Windows-specific lint flakes.
+      - name: cargo clippy
+        if: matrix.os == 'ubuntu-latest'
+        run: cargo clippy --all-targets -- -D warnings
+      - name: cargo test
+        run: cargo test --release
+
+  python:
+    name: Python ${{ matrix.python-version }} ${{ matrix.os }}
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.9", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - uses: dtolnay/rust-toolchain@stable
+      - uses: Swatinem/rust-cache@v2
+      # PEP 517 install — pulls maturin from build-system.requires, builds the
+      # Rust extension via maturin, and installs the package + test extras
+      # (pytest, scipy, matplotlib). Avoids the venv-required `maturin develop`
+      # path that fails on stock GitHub-hosted runners.
+      - name: install l1tv (PEP 517)
+        run: pip install ".[test]"
+      # Run pytest and demos from a directory that does NOT contain `l1tv/`,
+      # otherwise Python's cwd-on-sys.path rule shadows the installed package
+      # with the source-tree copy (which lacks the compiled `_core` extension).
+      - name: pytest
+        working-directory: ${{ runner.temp }}
+        run: pytest -v ${{ github.workspace }}/tests
+      - name: smoke demos
+        working-directory: ${{ runner.temp }}
+        shell: bash
+        run: |
+          python "${GITHUB_WORKSPACE}/demos_python/demo_real.py"
+          python "${GITHUB_WORKSPACE}/demos_python/demo_circ.py"

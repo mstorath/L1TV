@@ -1,0 +1,41 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite both the software and the associated paper below."
+title: "L1TV: Exact L1-TV regularization of real- or circle-valued signals"
+abstract: "Reference MATLAB implementation of exact, non-iterative algorithms for L1-TV regularization of real-valued and circle-valued (phase / orientation) signals. Solves the discrete L1-TV minimisation problem to global optimum via dynamic programming with a distance-transform speedup."
+type: software
+url: "https://github.com/mstorath/L1TV"
+repository-code: "https://github.com/mstorath/L1TV"
+license: MIT
+authors:
+  - family-names: Storath
+    given-names: Martin
+    email: martin.storath@thws.de
+    orcid: "https://orcid.org/0000-0003-1427-0776"
+    affiliation: "Lab for Mathematical Methods in Computer Vision and Machine Learning, Technische Hochschule Würzburg-Schweinfurt"
+  - family-names: Weinmann
+    given-names: Andreas
+    email: andreas.weinmann@thws.de
+    orcid: "https://orcid.org/0000-0002-4969-7609"
+    affiliation: "Department of Mathematics and Natural Sciences, Hochschule Darmstadt"
+preferred-citation:
+  type: article
+  title: "Exact algorithms for L1-TV regularization of real-valued or circle-valued signals"
+  authors:
+    - family-names: Storath
+      given-names: Martin
+      orcid: "https://orcid.org/0000-0003-1427-0776"
+    - family-names: Weinmann
+      given-names: Andreas
+      orcid: "https://orcid.org/0000-0002-4969-7609"
+    - family-names: Unser
+      given-names: Michael
+      orcid: "https://orcid.org/0000-0003-1248-2513"
+  journal: "SIAM Journal on Scientific Computing"
+  volume: 38
+  issue: 1
+  start: "A614"
+  end: "A630"
+  year: 2016
+  publisher:
+    name: "Society for Industrial and Applied Mathematics"
+  doi: "10.1137/15M101796X"
