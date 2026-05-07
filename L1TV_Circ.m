@@ -17,6 +17,11 @@ function x = L1TV_Circ( y, alpha, varargin )
 % SIAM Journal on Scientific Computing, 38(1), A614-A630.
 
 
+% force column-vector shape so unique(yAng), the antipodal concat, and weights
+% are all K-by-1 / N-by-1 (row-vector y would silently produce a 2-by-K
+% candidate matrix and garbage results in the original implementation)
+y = y(:);
+
 % parse input
 ip = inputParser;
 ip.addParameter('useDistTrans', true);
@@ -24,11 +29,12 @@ ip.addParameter('weights', ones(size(y)));
 
 parse(ip, varargin{:});
 par = ip.Results;
+par.weights = par.weights(:); % accept row-vector weights too
 
 % initialization
 yCom = exp(1i * y); % complex number representation of y
 yAng = angle(yCom); % assure angle to be in [-pi, pi]
-uniqueValues = unique(yAng); % determine uniqe angles
+uniqueValues = unique(yAng); % determine unique angles
 V = [uniqueValues; angle( -exp(1i * uniqueValues))]; % add antipodal points
 V = sort(V); % sort candidate values
 N = numel(yAng);
@@ -61,8 +67,9 @@ else
 end
 
 % backtracking
+x = zeros(N,1);
 [~,l] = min(B(:,N));
-x(N,1) = V(l);
+x(N) = V(l);
 for n=N-1:-1:1
     [~, l] = min(B(:, n) + alpha * distAngle(V, x(n+1)));
     x(n) = V(l);

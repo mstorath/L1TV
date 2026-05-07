@@ -15,6 +15,9 @@ function x = L1TV_Real( y, alpha, varargin )
 % Exact algorithms for L^1-TV regularization of real-valued or circle-valued signals. 
 % SIAM Journal on Scientific Computing, 38(1), A614-A630.
 
+% force column-vector shape so unique(y), V, and weights are all K-by-1 / N-by-1
+y = y(:);
+
 % parse input
 ip = inputParser;
 ip.addParameter('useDistTrans', true);
@@ -22,10 +25,10 @@ ip.addParameter('weights', ones(size(y)));
 
 parse(ip, varargin{:});
 par = ip.Results;
+par.weights = par.weights(:); % accept row-vector weights too
 
 % initialization
-uniqueValues = unique(y); % determine unique angles
-V = sort(uniqueValues); % sort values
+V = unique(y); % candidate values (unique returns sorted)
 N = numel(y);
 K = numel(V);
 B = zeros(K,N); % tabulation
@@ -46,8 +49,9 @@ for n=2:N
 end
 
 % backtracking
+x = zeros(N,1);
 [~,l] = min(B(:,N));
-x(N,1) = V(l);
+x(N) = V(l);
 for n=N-1:-1:1
     [~, l] = min(B(:, n) + alpha * abs(V - x(n+1)));
     x(n) = V(l);

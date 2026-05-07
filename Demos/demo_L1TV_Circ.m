@@ -5,11 +5,15 @@ rng(12345) % random seed for reproducibility
 N = 2000;
 t = 2*pi;
 lambda = 20 / N;
-K = 20;
 sigma= 0.3;
 innovation = randCP((rand([N, 1])-0.5) * t, lambda );
 signalUnwrapped = cumsum(innovation);
-h = fspecial('Gaussian', [N/10, 1], 10);
+% Gaussian smoothing kernel (no Image Processing Toolbox required)
+sig_h = 10;
+halfwin = floor((N/10 - 1)/2);
+t_h = (-halfwin:halfwin).';
+h = exp(-t_h.^2 / (2*sig_h^2));
+h = h / sum(h);
 smoothed = conv(signalUnwrapped, h, 'same');
 groundTruth = wrapAngle(smoothed);
 
