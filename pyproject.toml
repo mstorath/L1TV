@@ -40,9 +40,13 @@ authors = [
   {name = "Andreas Weinmann"},
 ]
 
+[project.optional-dependencies]
+test = ["pytest>=7", "scipy>=1.7", "matplotlib"]
+
 [project.urls]
 Homepage = "https://github.com/mstorath/L1TV"
 Repository = "https://github.com/mstorath/L1TV"
+Changelog = "https://github.com/mstorath/L1TV/blob/master/CHANGELOG.md"
 "Bug Tracker" = "https://github.com/mstorath/L1TV/issues"
 
 [tool.maturin]
