@@ -1,15 +1,19 @@
-%%% Demo for denoising a circle-valued signal by the L1-TV model
+%%% Demo for denoising a real-valued signal by the L1-TV model
 
 % create random signal (smoothed pcw constant signal)
 rng(12345) % random seed for reproducibility
 N = 2000;
 lambda = 20 / N;
-K = 20;
-scale = 100; % scale of signal (change to observe constrast invariance of L1TV)
+scale = 100; % scale of signal (change to observe contrast invariance of L1TV)
 sigma= scale* 0.3;
 innovation =  randCP(randn([N, 1]), lambda );
 signal = scale * cumsum(innovation);
-h = fspecial('Gaussian', [N/10, 1], 10);
+% Gaussian smoothing kernel (no Image Processing Toolbox required)
+sig_h = 10;
+halfwin = floor((N/10 - 1)/2);
+t_h = (-halfwin:halfwin).';
+h = exp(-t_h.^2 / (2*sig_h^2));
+h = h / sum(h);
 groundTruth = conv(signal, h, 'same');
 
 % add noise

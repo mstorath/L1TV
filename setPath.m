@@ -1,10 +1,8 @@
-% sets the paths 
+% Adds the L1TV folders to the Matlab path for the current session.
+% Run `savepath` yourself if you want this to persist across sessions.
 disp('Setting Matlab path...');
 folder = fileparts(which(mfilename));
 addpath(...
     fullfile(folder, ''),...
     fullfile(folder, 'Auxiliary') ...
     );
-
-% save pathdef
-savepath;
