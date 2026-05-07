@@ -20,7 +20,9 @@
 /// always need argmin pointers for backtracking. The argmin-free variant is
 /// retained for testing and for downstream Rust users who only need the
 /// envelope.
-#[allow(dead_code)]
+// `clippy::needless_range_loop`: the sweep needs both `b[i]` and `b[i-1]`,
+// which doesn't translate cleanly to an iterator chain.
+#[allow(dead_code, clippy::needless_range_loop)]
 pub fn l1_dt(b: &mut [f64], r: &[f64], alpha: f64) {
     let k = b.len();
     debug_assert_eq!(r.len(), k);
@@ -46,6 +48,8 @@ pub fn l1_dt(b: &mut [f64], r: &[f64], alpha: f64) {
 /// On return, `argmin[k]` holds the index j ∈ {0..b.len()} of the source value
 /// that minimised `b_initial[j] + alpha * |r[k] - r[j]|`. The caller does not
 /// need to pre-fill `argmin`; this function initialises it.
+// Same `needless_range_loop` rationale as `l1_dt`.
+#[allow(clippy::needless_range_loop)]
 pub fn l1_dt_with_argmin(b: &mut [f64], r: &[f64], alpha: f64, argmin: &mut [u32]) {
     let k = b.len();
     debug_assert_eq!(r.len(), k);
@@ -118,7 +122,9 @@ mod tests {
         // Deterministic LCG for reproducibility without rand-crate.
         let mut state: u64 = 0xDEADBEEF;
         let mut next = || {
-            state = state.wrapping_mul(6364136223846793005).wrapping_add(1442695040888963407);
+            state = state
+                .wrapping_mul(6364136223846793005)
+                .wrapping_add(1442695040888963407);
             (state >> 33) as f64 / (1u64 << 31) as f64 - 1.0
         };
         for _trial in 0..20 {

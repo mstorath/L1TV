@@ -199,9 +199,9 @@ fn build_candidates(y_ang: &[f64]) -> Vec<f64> {
 fn argmin(b: &[f64]) -> usize {
     let mut best = b[0];
     let mut idx = 0;
-    for i in 1..b.len() {
-        if b[i] < best {
-            best = b[i];
+    for (i, &v) in b.iter().enumerate().skip(1) {
+        if v < best {
+            best = v;
             idx = i;
         }
     }
@@ -254,15 +254,13 @@ mod tests {
             let d1 = arc_distance(a, b);
             let d2 = arc_distance(b, a);
             assert!((d1 - d2).abs() < 1e-15);
-            assert!(d1 >= 0.0 && d1 <= PI + 1e-12);
+            assert!((0.0..=PI + 1e-12).contains(&d1));
         }
     }
 
     #[test]
     fn dt_and_naive_agree_on_objective() {
-        let y: Vec<f64> = (0..20)
-            .map(|i| (i as f64 * 0.7).sin() * PI)
-            .collect();
+        let y: Vec<f64> = (0..20).map(|i| (i as f64 * 0.7).sin() * PI).collect();
         let alpha = 0.4;
         let x_dt = solve_l1_tv_circ(&y, alpha, None, true);
         let x_nv = solve_l1_tv_circ(&y, alpha, None, false);
@@ -296,7 +294,10 @@ mod tests {
         let c_dt = cost(&x_dt, &y, alpha, Some(&w));
         let c_nv = cost(&x_nv, &y, alpha, Some(&w));
         let relerr = (c_dt - c_nv).abs() / c_dt.abs().max(1.0);
-        assert!(relerr < 1e-12, "branch-cut DT vs naive: dt={c_dt}, nv={c_nv}");
+        assert!(
+            relerr < 1e-12,
+            "branch-cut DT vs naive: dt={c_dt}, nv={c_nv}"
+        );
     }
 
     #[test]
@@ -321,7 +322,10 @@ mod tests {
         let x = solve_l1_tv_circ(&y, 1e10, None, true);
         for i in 1..x.len() {
             let d = arc_distance(x[i], x[0]);
-            assert!(d < 1e-9, "huge alpha should collapse to constant arc, got {d}");
+            assert!(
+                d < 1e-9,
+                "huge alpha should collapse to constant arc, got {d}"
+            );
         }
     }
 
@@ -346,7 +350,10 @@ mod tests {
         let v = build_candidates(&y.iter().map(|&yi| wrap_angle(yi)).collect::<Vec<_>>());
         let v_bits: std::collections::BTreeSet<u64> = v.iter().map(|v| v.to_bits()).collect();
         for &xi in &x {
-            assert!(v_bits.contains(&xi.to_bits()), "x value {xi} not in candidate set");
+            assert!(
+                v_bits.contains(&xi.to_bits()),
+                "x value {xi} not in candidate set"
+            );
         }
     }
 }

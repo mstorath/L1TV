@@ -141,9 +141,9 @@ fn sorted_unique(y: &[f64]) -> Vec<f64> {
 fn argmin(b: &[f64]) -> usize {
     let mut best = b[0];
     let mut idx = 0;
-    for i in 1..b.len() {
-        if b[i] < best {
-            best = b[i];
+    for (i, &v) in b.iter().enumerate().skip(1) {
+        if v < best {
+            best = v;
             idx = i;
         }
     }
@@ -246,10 +246,13 @@ mod tests {
 
     #[test]
     fn all_equal_y_returns_constant() {
-        let y = vec![3.14; 7];
+        // Pick a constant that isn't close to a famous mathematical constant
+        // (clippy::approx_constant complains about 3.14 near PI).
+        let val = 4.5_f64;
+        let y = vec![val; 7];
         let x = solve_l1_tv_real(&y, 0.5, None, true);
         for &xi in &x {
-            assert_eq!(xi, 3.14);
+            assert_eq!(xi, val);
         }
     }
 
@@ -267,8 +270,7 @@ mod tests {
         let mut prev_distinct = usize::MAX;
         for &alpha in &[0.0, 0.1, 0.5, 1.0, 5.0, 1e6] {
             let x = solve_l1_tv_real(&y, alpha, None, true);
-            let distinct: std::collections::BTreeSet<u64> =
-                x.iter().map(|v| v.to_bits()).collect();
+            let distinct: std::collections::BTreeSet<u64> = x.iter().map(|v| v.to_bits()).collect();
             assert!(
                 distinct.len() <= prev_distinct,
                 "distinct levels grew with alpha: alpha={alpha}, levels={}, prev={prev_distinct}",
