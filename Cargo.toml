@@ -1,0 +1,28 @@
+[package]
+name = "_l1tv_core"
+version = "0.1.0"
+edition = "2021"
+description = "Rust core for the l1tv Python package — exact L1-TV regularisation of real- or circle-valued 1-D signals (Storath, Weinmann, Unser 2016). Automated port of the original MATLAB by Claude Opus coding agent (Anthropic, 2026)."
+authors = [
+    "Martin Storath <storath@gmail.com> (original MATLAB)",
+    "Andreas Weinmann (original MATLAB)",
+    "Claude Opus coding agent, Anthropic (Rust port, 2026)"
+]
+license = "MIT"
+repository = "https://github.com/mstorath/L1TV"
+readme = "README_PYTHON.md"
+
+[lib]
+name = "_l1tv_core"
+crate-type = ["cdylib"]
+
+[dependencies]
+# Versions match the family-wide pin (Pottslab, CSSD): pyo3 0.24.1 closes
+# GHSA-pph8-gcv7-4qj5 (PyString::from_object buffer overread); the numpy
+# crate version tracks pyo3's minor.
+pyo3 = { version = "0.24.1", features = ["extension-module"] }
+numpy = "0.24"
+
+[profile.release]
+opt-level = 3
+lto = true
