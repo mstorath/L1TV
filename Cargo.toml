@@ -20,9 +20,19 @@ crate-type = ["cdylib"]
 # Versions match the family-wide pin (Pottslab, CSSD): pyo3 0.24.1 closes
 # GHSA-pph8-gcv7-4qj5 (PyString::from_object buffer overread); the numpy
 # crate version tracks pyo3's minor; ndarray version tracks numpy's.
-pyo3 = { version = "0.24.1", features = ["extension-module"] }
+pyo3 = { version = "0.24.1" }
 numpy = "0.24"
 ndarray = "0.16"
+
+# `extension-module` is gated behind a Cargo feature instead of being on
+# unconditionally. Reason: with the feature ON, pyo3 instructs the linker to
+# leave Python symbols unresolved (resolved at runtime by the Python
+# interpreter that loads the .so). That works for the wheel target but breaks
+# `cargo test`, whose test binary has no Python interpreter to satisfy the
+# undefined symbols at runtime — macOS's strict linker rejects the binary.
+# Maturin enables the feature via [tool.maturin].features in pyproject.toml.
+[features]
+extension-module = ["pyo3/extension-module"]
 
 [profile.release]
 opt-level = 3

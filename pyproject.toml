@@ -52,6 +52,10 @@ Changelog = "https://github.com/mstorath/L1TV/blob/master/CHANGELOG.md"
 [tool.maturin]
 python-source = "."
 module-name = "l1tv._core"
+# `extension-module` is feature-gated in Cargo.toml so `cargo test` can build
+# without it (and link libpython normally on macOS, which doesn't tolerate
+# unresolved symbols in a test binary). Maturin must turn it on for the wheel.
+features = ["extension-module"]
 include = [{ path = "LICENSE", format = "wheel" }]
 
 [tool.pytest.ini_options]
