@@ -6,6 +6,7 @@ version = 4
 name = "_l1tv_core"
 version = "0.1.0"
 dependencies = [
+ "ndarray",
  "numpy",
  "pyo3",
 ]

@@ -42,6 +42,9 @@ build/
 # Jupyter
 .ipynb_checkpoints/
 
+# Demo plot artifacts (regenerated on demand)
+demos_python/*.png
+
 # Virtualenvs
 .venv/
 venv/

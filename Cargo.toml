@@ -19,9 +19,10 @@ crate-type = ["cdylib"]
 [dependencies]
 # Versions match the family-wide pin (Pottslab, CSSD): pyo3 0.24.1 closes
 # GHSA-pph8-gcv7-4qj5 (PyString::from_object buffer overread); the numpy
-# crate version tracks pyo3's minor.
+# crate version tracks pyo3's minor; ndarray version tracks numpy's.
 pyo3 = { version = "0.24.1", features = ["extension-module"] }
 numpy = "0.24"
+ndarray = "0.16"
 
 [profile.release]
 opt-level = 3

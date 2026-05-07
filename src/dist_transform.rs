@@ -15,6 +15,12 @@
 /// In-place L1 distance transform on a sorted grid.
 ///
 /// `r` must be sorted ascending; `b.len() == r.len()`; `alpha >= 0`.
+///
+/// Both DP solvers in this crate use `l1_dt_with_argmin` instead — they
+/// always need argmin pointers for backtracking. The argmin-free variant is
+/// retained for testing and for downstream Rust users who only need the
+/// envelope.
+#[allow(dead_code)]
 pub fn l1_dt(b: &mut [f64], r: &[f64], alpha: f64) {
     let k = b.len();
     debug_assert_eq!(r.len(), k);
