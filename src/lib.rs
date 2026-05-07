@@ -3,6 +3,7 @@
 //
 // PyO3 module: exposes Rust implementations to Python.
 
+mod circ;
 mod dist_transform;
 mod real;
 
