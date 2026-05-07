@@ -24,7 +24,15 @@ jobs:
       - uses: PyO3/maturin-action@v1
         with:
           target: ${{ matrix.target }}
-          args: --release --out dist --zig
+          # Drop --zig and rely on `manylinux: auto`. With --zig, maturin
+          # cross-links on the host and needs an aarch64-targeted Python on
+          # PATH (which there isn't), causing the aarch64 build to fail with
+          # "Couldn't find any python interpreters". `manylinux: auto` runs
+          # the build inside the official quay.io/pypa/manylinux*_<arch>
+          # container, which ships /opt/python/cp3X-cp3X/bin/python for
+          # every supported version; --find-interpreter picks them up so we
+          # get a wheel per Python per arch.
+          args: --release --out dist --find-interpreter
           manylinux: auto
       - uses: actions/upload-artifact@v4
         with:
