@@ -28,11 +28,12 @@ jobs:
           # cross-links on the host and needs an aarch64-targeted Python on
           # PATH (which there isn't), causing the aarch64 build to fail with
           # "Couldn't find any python interpreters". `manylinux: auto` runs
-          # the build inside the official quay.io/pypa/manylinux*_<arch>
-          # container, which ships /opt/python/cp3X-cp3X/bin/python for
-          # every supported version; --find-interpreter picks them up so we
-          # get a wheel per Python per arch.
-          args: --release --out dist --find-interpreter
+          # the build inside the official manylinux<arch> container.
+          # Pin --interpreter explicitly to 3.9–3.13: `--find-interpreter`
+          # would also pick up Python 3.14 (now shipping in the manylinux
+          # image) and pyo3 0.24.2 only supports up to 3.13. Bumping pyo3
+          # to >=0.25 to add 3.14 support is a separate follow-up.
+          args: --release --out dist --interpreter python3.9 python3.10 python3.11 python3.12 python3.13
           manylinux: auto
       - uses: actions/upload-artifact@v4
         with:
