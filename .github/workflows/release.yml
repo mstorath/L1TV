@@ -139,3 +139,20 @@ jobs:
           body_path: release-notes.md
           generate_release_notes: true
           files: dist/*
+
+      - name: Verify uploaded package (real install + import + call)
+        # Defends against silent failures where PyPI accepts the upload
+        # but the package isn't actually usable (renamed module, missing
+        # __init__, broken native binding, ABI mismatch, etc.).
+        # Mirrors CMF v0.1.7's step — see devcontainer reports/11.
+        run: |
+          # Brief delay so PyPI's CDN settles the new version.
+          sleep 30
+          pip install --no-cache-dir --index-url https://pypi.org/simple/ l1tv
+          python -c "
+          import numpy as np, l1tv
+          from importlib.metadata import version
+          out = l1tv.min_l1_tv(np.zeros(8), alpha=0.3)
+          assert out.shape == (8,), f'unexpected shape {out.shape}'
+          print(f'l1tv {version(\"l1tv\")} verify OK')
+          "
