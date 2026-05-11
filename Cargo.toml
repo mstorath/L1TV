@@ -1,6 +1,6 @@
 [package]
 name = "_l1tv_core"
-version = "0.1.0"
+version = "1.0.0"
 edition = "2021"
 description = "Rust core for the l1tv Python package — exact L1-TV regularisation of real- or circle-valued 1-D signals (Storath, Weinmann, Unser 2016). Automated port of the original MATLAB by Claude Opus coding agent (Anthropic, 2026)."
 authors = [

@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "l1tv"
-version = "0.1.0"
+version = "1.0.0"
 description = "Exact L1-TV regularisation of real- or circle-valued 1-D signals — Python/Rust port of MATLAB l1tv (Storath, Weinmann, Unser 2016)"
 readme = "README_PYTHON.md"
 license = {text = "MIT"}
