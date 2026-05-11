@@ -7,7 +7,24 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 The MATLAB reference implementation is tracked separately in this same repo's
 git history; algorithmic semantics are unchanged across the port.
 
-## [0.1.0] — Unreleased
+## [1.0.0] — 2026-05-11
+
+Promoted from 0.1.0 to 1.0.0 as part of the lab-wide maintenance cycle. The
+Python/Rust port has been stable since its initial commit and the public API
+(`min_l1_tv`, `min_l1_tv_circ`) is unchanged; 1.0.0 signals API stability.
+
+### Changed
+
+- Released as 1.0.0 (was 0.1.0 unreleased).
+- README rewritten and harmonised with the lab-repo family (badge block,
+  Quickstart-first ordering, "See also" section linking the five sibling
+  repos, License footer).
+- Auto-create GitHub Release on tag push (alongside PyPI publish).
+- `CITATION.cff` populated with `version` and `date-released` fields so
+  citation tooling reads from the file directly rather than falling back to
+  GitHub Releases.
+
+## [0.1.0] — Initial port (Python/Rust, pre-release)
 
 Initial Python/Rust port of the MATLAB L1TV library by Storath, Weinmann
 (2016).
