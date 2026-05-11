@@ -7,6 +7,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 The MATLAB reference implementation is tracked separately in this same repo's
 git history; algorithmic semantics are unchanged across the port.
 
+## [Unreleased]
+
 ## [1.0.0] — 2026-05-11
 
 Promoted from 0.1.0 to 1.0.0 as part of the lab-wide maintenance cycle. The
@@ -73,4 +75,6 @@ and can drop further if argmin pointers shrink to `u16` (when `K < 65536`).
 These differences do not affect algorithmic semantics for column-vector
 MATLAB inputs, which is the only shape the MATLAB demos used.
 
+[Unreleased]: https://github.com/mstorath/L1TV/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/mstorath/L1TV/releases/tag/v1.0.0
 [0.1.0]: https://github.com/mstorath/L1TV/releases/tag/v0.1.0
